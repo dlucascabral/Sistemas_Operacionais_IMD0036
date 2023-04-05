@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -76,6 +77,7 @@ int main(int argc, char const *argv[])
         int matr_column_size = mat2_column_size;
         vector<vector<int>> mtx_resulting;
 
+        chrono::steady_clock::time_point begin = chrono::steady_clock::now();
         for (int i = 0; i < matr_row_size; i++)
         {
             mtx_resulting.push_back(vector<int>());
@@ -87,9 +89,12 @@ int main(int argc, char const *argv[])
                     mtx_resulting[i][j] += mtx1[i][k] * mtx2[k][j];
                 }
                 
-            }
-            
+            }   
         }
+        chrono::steady_clock::time_point end = chrono::steady_clock::now();
+        int duration_time = chrono::duration_cast<chrono::microseconds>(end-begin).count();
+
+        cout << "Tempo: " << duration_time << "ms" << endl;
 
         // imprimindo matriz resultante na tela
         // cout << "Matriz resultante" << endl;
