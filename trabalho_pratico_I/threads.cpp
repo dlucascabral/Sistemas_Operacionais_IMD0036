@@ -1,8 +1,25 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <thread>
 
 using namespace std;
+
+void matrix_mult(int row_size ,int column_size, int row, vector<vector<int>> m1, vector<vector<int>> m2, vector<vector<int>> mtx_r) {
+    // row_size = mat1_row_size
+    // column_size = mat2_column_size
+    for (int col = 0; col < column_size; col++)
+    {
+        for (int i = 0; i < row_size; i++)
+        {
+            mtx_r[row][col] += m1[0][i] * m2[i][col];
+        }
+        
+    }
+
+    row = row + 4;
+    
+}
 
 int main(int argc, char const *argv[])
 {
@@ -78,6 +95,13 @@ int main(int argc, char const *argv[])
         int matr_row_size = mat1_row_size;
         int matr_column_size = mat2_column_size;
         vector<vector<int>> mtx_resulting;
+
+        // criando as threads
+        std::thread t1();
+        std::thread t2();
+        std::thread t3();
+        std::thread t4();
+
 
         chrono::steady_clock::time_point begin = chrono::steady_clock::now();
         
