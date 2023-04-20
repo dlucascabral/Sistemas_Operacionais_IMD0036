@@ -29,18 +29,20 @@ if (coluna1 != linha2)
     }
     
     //int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
-    int **matriz1, **matriz2, **matrizresultante;
-    matriz1 = (int**)calloc(l1,sizeof(int *));
-    for (int i = 0; i < c1; i++)
+    int **matriz1 = new int*[linha1];
+    int **matriz2 = new int*[linha2];
+    int **matrizresultante = new int*[linha1];
+    for (int i = 0; i < linha1; i++)
     {
-        matriz1[i] = (int *)calloc(coluna1, sizeof(int));
+        matriz1[i] = new int[coluna1];
+        matrizresultante[i] = new int[coluna2];
     }
-    
-    matriz2 = (int **)calloc(linha2,sizeof(int*));
     for (int i = 0; i < linha2; i++)
     {
-        matriz2[i] = (int *)calloc(coluna2,sizeof(int));
+        matriz2[i] = new int[coluna2];
     }
+    
+    
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     //gerar valores aleatorios
     for (int i = 0; i < linha1; i++)
@@ -60,7 +62,7 @@ if (coluna1 != linha2)
         }
         
     }
-
+/*
     //imprimir elas
     for (int i = 0; i < linha1; i++)
     {
@@ -80,15 +82,7 @@ if (coluna1 != linha2)
         }
         cout<<endl;
         
-    }
-
-    //matriz resultante
-    
-    matrizresultante = (int **)calloc(linha1, sizeof(int *));
-    for (int i = 0; i < linha1; i++)
-    {
-        matrizresultante[i] = (int *)calloc(coluna2, sizeof(int));
-    }
+    }*/
     
     //Calculando
     for (int i = 0; i < linha1; i++)
@@ -104,7 +98,7 @@ if (coluna1 != linha2)
         }
          
     }
-    cout<<"                                  "<<endl;
+   /* cout<<"                                  "<<endl;
     for (int i = 0; i < linha1; i++)
     {
         for (int j = 0; j < coluna2; j++)
@@ -113,22 +107,24 @@ if (coluna1 != linha2)
         }
         cout<<endl;
         
-    }
+    }*/
 
      for ( int i = 0; i < linha1; i++)
     {
-        free(matriz1[i]);
-        free(matrizresultante[i]);
+        delete[] matriz1[i];
+        delete[] matrizresultante[i];
     }
 
     for (int i = 0; i < linha2; i++)
     {
-        free(matriz2[i]);
+        delete[] matriz2[i];
     }
-   free(matriz1);
-    free(matriz2);
-    free(matrizresultante);
-    //Para iterar o valor do P eu tenho que fazer o calculo
+    
+    delete[] matriz1;
+    delete[] matriz2;
+    delete[] matrizresultante;
+
+     //Para iterar o valor do P eu tenho que fazer o calculo
     //das matrizes pra descobrir quantas colunas eu tenho.
     //depois da multiplicação.
     //faz um exit pra finalizar o processo depois de fazer a resultante.
@@ -138,7 +134,8 @@ if (coluna1 != linha2)
     
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
-    cout<<"Tempo" << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[ms]" <<endl;
+    float tempo = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
+    cout<<"Tempo " << tempo/1000 << "[s]" <<endl;
     
     return 0;
 }
