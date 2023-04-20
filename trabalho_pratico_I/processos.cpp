@@ -83,6 +83,15 @@ int main(int argc, char *argv[]){
         }
          
     }
+
+    for (int i = 0; i < linha1; i++)
+    {
+        for (int j = 0; j < coluna2; j++)
+        {
+           cout << matrizresultante[i][j]<<"  ";
+        }
+        cout<<endl;
+    }
 /*usando a função delete para liberar os espaços utilizados na criação das matrizes*/
      for ( int i = 0; i < linha1; i++)
     {
