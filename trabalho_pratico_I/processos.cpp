@@ -9,6 +9,8 @@
 
 using namespace std;
 
+
+
 int main(int argc, char *argv[]){
     
     int l1 = atoi(argv[1]);
@@ -16,13 +18,18 @@ int main(int argc, char *argv[]){
     int l2 = atoi(argv[3]);
     int c2 = atoi(argv[4]);    
     int linha1, coluna1, linha2, coluna2;
-    int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
-    int **matriz1, **matriz2, **matrizresultante;
     linha1 = l1;
     linha2 = l2;
     coluna1 = c1;
     coluna2 = c2;
-
+if (coluna1 != linha2)
+    {
+        cout<<"Erro, as dimensões escolhidas não são permitidas para a multiplicação de matrizes."<<endl;
+        return 1;
+    }
+    
+    int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
+    int **matriz1, **matriz2, **matrizresultante;
     matriz1 = (int**)calloc(l1,sizeof(int *));
     for (int i = 0; i < c1; i++)
     {
@@ -82,15 +89,18 @@ int main(int argc, char *argv[]){
     {
         matrizresultante[i] = (int *)calloc(coluna2, sizeof(int));
     }
-    int res;
+    
     //Calculando
     for (int i = 0; i < linha1; i++)
     {
         for (int j = 0; j < coluna2; j++)
         {
-            int a = j;
-           matrizresultante[i][j]   = matrizresultante[i][j] + (matriz1[i][j] * matriz2[j][i]);
-             
+           matrizresultante[i][j] = 0;
+           for (int k = 0; k < coluna1; k++)
+           {
+             matrizresultante[i][j] += matriz1[i][k] * matriz2[k][j];
+           }
+           
         }
          
     }
@@ -105,6 +115,19 @@ int main(int argc, char *argv[]){
         
     }
     
+    for ( int i = 0; i < linha1; i++)
+    {
+        free(matriz1[i]);
+        free(matrizresultante[i]);
+    }
+
+    for (int i = 0; i < linha2; i++)
+    {
+        free(matriz2[i]);
+    }
+    free(matriz1);
+    free(matriz2);
+    free(matrizresultante);
     //Para iterar o valor do P eu tenho que fazer o calculo
     //das matrizes pra descobrir quantas colunas eu tenho.
     //depois da multiplicação.
@@ -116,5 +139,6 @@ int main(int argc, char *argv[]){
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
     cout<<"Tempo" << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[ms]" <<endl;
+    
     return 0;
 }
