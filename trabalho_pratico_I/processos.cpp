@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/shm.h>
@@ -12,7 +11,9 @@ using namespace std;
 
 
 int main(int argc, char *argv[]){
+ //função para poder gerar os números aleatórios
     srand(time(NULL));
+ 
     int l1 = atoi(argv[1]);
     int c1 = atoi(argv[2]);
     int l2 = atoi(argv[3]);
@@ -22,13 +23,16 @@ int main(int argc, char *argv[]){
     linha2 = l2;
     coluna1 = c1;
     coluna2 = c2;
-if (coluna1 != linha2)
+ //verificar se é possível calcular a matriz resultante 
+    if (coluna1 != linha2)
     {
         cout<<"Erro, as dimensões escolhidas não são permitidas para a multiplicação de matrizes."<<endl;
         return 1;
     }
     
-    //int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
+    /*int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);*/
+
+ /*alocando dinamicamente as matrizes com a função new*/
     int **matriz1 = new int*[linha1];
     int **matriz2 = new int*[linha2];
     int **matrizresultante = new int*[linha1];
@@ -41,10 +45,9 @@ if (coluna1 != linha2)
     {
         matriz2[i] = new int[coluna2];
     }
-    
-    
+
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    //gerar valores aleatorios
+   /*loop para preencher com numeros aleatórios as matrizes*/
     for (int i = 0; i < linha1; i++)
     {
         for (int j = 0; j < coluna1; j++)
@@ -62,29 +65,11 @@ if (coluna1 != linha2)
         }
         
     }
-/*
-    //imprimir elas
-    for (int i = 0; i < linha1; i++)
-    {
-        for (int j = 0; j < coluna1; j++)
-        {
-            printf("%5d",matriz1[i][j]);
-        }
-        cout<<endl;
-        
-    }
-    cout<<"                                  "<<endl;
-    for (int i = 0; i < linha2; i++)
-    {
-        for (int j = 0; j < coluna2; j++)
-        {
-            printf("%5d",matriz2[i][j]);
-        }
-        cout<<endl;
-        
-    }*/
-    
-    //Calculando
+ /*vendo o que eu faço com essa criação de um processo filho.*/   
+  /*  int pid;
+    pid = fork();
+    */
+/*calculo da matriz resultante*/
     for (int i = 0; i < linha1; i++)
     {
         for (int j = 0; j < coluna2; j++)
@@ -98,17 +83,7 @@ if (coluna1 != linha2)
         }
          
     }
-   /* cout<<"                                  "<<endl;
-    for (int i = 0; i < linha1; i++)
-    {
-        for (int j = 0; j < coluna2; j++)
-        {
-            printf("%5d",matrizresultante[i][j]);
-        }
-        cout<<endl;
-        
-    }*/
-
+/*usando a função delete para liberar os espaços utilizados na criação das matrizes*/
      for ( int i = 0; i < linha1; i++)
     {
         delete[] matriz1[i];
@@ -123,15 +98,7 @@ if (coluna1 != linha2)
     delete[] matriz1;
     delete[] matriz2;
     delete[] matrizresultante;
-
-     //Para iterar o valor do P eu tenho que fazer o calculo
-    //das matrizes pra descobrir quantas colunas eu tenho.
-    //depois da multiplicação.
-    //faz um exit pra finalizar o processo depois de fazer a resultante.
-    //assim descendo até todas as linhas.
-    /*int pid;
-    pid = fork();*/
-    
+ 
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
     float tempo = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
