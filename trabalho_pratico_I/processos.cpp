@@ -6,13 +6,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <chrono>
-
+#include <time.h>
 using namespace std;
 
 
 
 int main(int argc, char *argv[]){
-    
+    srand(time(NULL));
     int l1 = atoi(argv[1]);
     int c1 = atoi(argv[2]);
     int l2 = atoi(argv[3]);
@@ -28,7 +28,7 @@ if (coluna1 != linha2)
         return 1;
     }
     
-    int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
+    //int seg_id = shmget(IPC_PRIVATE, 20*sizeof(char), IPC_CREAT | 0666);
     int **matriz1, **matriz2, **matrizresultante;
     matriz1 = (int**)calloc(l1,sizeof(int *));
     for (int i = 0; i < c1; i++)
@@ -114,8 +114,8 @@ if (coluna1 != linha2)
         cout<<endl;
         
     }
-    
-    for ( int i = 0; i < linha1; i++)
+
+     for ( int i = 0; i < linha1; i++)
     {
         free(matriz1[i]);
         free(matrizresultante[i]);
@@ -125,7 +125,7 @@ if (coluna1 != linha2)
     {
         free(matriz2[i]);
     }
-    free(matriz1);
+   free(matriz1);
     free(matriz2);
     free(matrizresultante);
     //Para iterar o valor do P eu tenho que fazer o calculo
