@@ -5,19 +5,11 @@
 
 using namespace std;
 
-void matrix_mult(int row_size ,int column_size, int row, vector<vector<int>> m1, vector<vector<int>> m2, vector<vector<int>> mtx_r) {
-    // row_size = mat1_row_size
-    // column_size = mat2_column_size
-    for (int col = 0; col < column_size; col++)
+void matrix_mult(int size, int row, int col, vector<vector<int>> m1, vector<vector<int>> m2, vector<vector<int>> mtx_r) {
+    for (int i = 0; i < size; i++)
     {
-        for (int i = 0; i < row_size; i++)
-        {
-            mtx_r[row][col] += m1[0][i] * m2[i][col];
-        }
-        
+        mtx_r[row][col] += m1[row][i] * m2[i][col];       
     }
-
-    row = row + 4;
     
 }
 
@@ -95,29 +87,19 @@ int main(int argc, char const *argv[])
         int matr_row_size = mat1_row_size;
         int matr_column_size = mat2_column_size;
         vector<vector<int>> mtx_resulting;
-
-        // criando as threads
-        std::thread t1();
-        std::thread t2();
-        std::thread t3();
-        std::thread t4();
-
-
-        chrono::steady_clock::time_point begin = chrono::steady_clock::now();
         
-        //IDEIA
-        //UTILIZAR 4 THREADS
-        //CRIAR QUATRO LAÇOS DE REPETIÇÃO
-        //1 PARA CADA THREAD
-        //ONDE CADA THREAD FICARA RESPONSÁVEL PELA EXECUÇÃO DE UMA MULTIPLICAÇÃO LxC
-
-        chrono::steady_clock::time_point end = chrono::steady_clock::now();
-        int duration_time = chrono::duration_cast<chrono::microseconds>(end-begin).count();
-
-        cout << "Tempo: " << duration_time << "ms" << endl;
-
-        // imprimindo matriz resultante na tela
-        // cout << "Matriz resultante" << endl;
+        for (int i = 0; i < matr_row_size; i++)
+        {
+            mtx_resulting.push_back(vector<int>());
+            for (int j = 0; j < matr_column_size; j++)
+            {
+                mtx_resulting[i].push_back(0);
+            }
+            
+        }
+        
+        // imprimindo matriz resultante inicializada
+        // cout << "Matriz Resultante" << endl;
         // for (int i = 0; i < matr_row_size; i++)
         // {
         //     for (int j = 0; j < matr_column_size; j++)
@@ -126,6 +108,37 @@ int main(int argc, char const *argv[])
         //     }
         //     cout << "" << endl;
         // }
+
+        // // criando as threads
+        // std::thread t1();
+        // std::thread t2();
+        // std::thread t3();
+        // std::thread t4();
+
+
+        // chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+        
+        // //IDEIA
+        // //UTILIZAR 4 THREADS
+        // //CRIAR QUATRO LAÇOS DE REPETIÇÃO
+        // //1 PARA CADA THREAD
+        // //ONDE CADA THREAD FICARA RESPONSÁVEL PELA EXECUÇÃO DE UMA MULTIPLICAÇÃO LxC
+
+        // chrono::steady_clock::time_point end = chrono::steady_clock::now();
+        // int duration_time = chrono::duration_cast<chrono::microseconds>(end-begin).count();
+
+        // cout << "Tempo: " << duration_time << "ms" << endl;
+
+        // // imprimindo matriz resultante na tela
+        // // cout << "Matriz resultante" << endl;
+        // // for (int i = 0; i < matr_row_size; i++)
+        // // {
+        // //     for (int j = 0; j < matr_column_size; j++)
+        // //     {
+        // //         cout << mtx_resulting[i][j] << " ";
+        // //     }
+        // //     cout << "" << endl;
+        // // }
 
     }
     
