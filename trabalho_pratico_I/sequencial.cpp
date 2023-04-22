@@ -92,7 +92,7 @@ int main(int argc, char const *argv[])
             }   
         }
         chrono::steady_clock::time_point end = chrono::steady_clock::now();
-        int duration_time = chrono::duration_cast<chrono::microseconds>(end-begin).count();
+        int duration_time = chrono::duration_cast<chrono::milliseconds>(end-begin).count();
 
         cout << "Tempo: " << duration_time << "ms" << endl;
 
