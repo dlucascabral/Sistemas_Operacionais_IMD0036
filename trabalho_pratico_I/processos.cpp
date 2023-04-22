@@ -69,12 +69,16 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
     matrizresultante = (int *) shmat(memoria, NULL, 0);
+
+
+
 //criando os processos 1 e 2
 
     pid_t processo1, processo2;
     int metade = linha1/2;
     processo1 = fork();
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+   
     if (processo1 < 0)
     {
         cerr<<"Erro na criação do processo1"<<endl;
@@ -125,11 +129,13 @@ int main(int argc, char *argv[]){
             exit(EXIT_SUCCESS);
         }
     }
+
 //esperando os dois processos acabarem para retomar ao processo pai.
     for (int i = 0; i < 2; i++)
     {
         wait(NULL);
     }
+    
     shmctl(memoria, IPC_RMID, NULL);
 //desalocando as memórias.
      for ( int i = 0; i < linha1; i++)
@@ -147,8 +153,7 @@ int main(int argc, char *argv[]){
  
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
-    float tempo = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
+    int tempo = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
     cout<<"Tempo " << tempo << "[ms]" <<endl;
-    
     return 0;
 }
