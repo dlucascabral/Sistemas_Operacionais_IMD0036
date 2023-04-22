@@ -3,9 +3,14 @@
 #include <chrono>
 #include <thread>
 
+int row = 0;
+int col = 0;
+int mtx_r[0][0];
+
 using namespace std;
 
-void matrix_mult(int size, int row, int col, vector<vector<int>> m1, vector<vector<int>> m2, vector<vector<int>> mtx_r) {
+void matrix_mult(vector<vector<int>> m1, vector<vector<int>> m2, vector<vector<int>> mtx_r) {
+    int size = row;
     for (int i = 0; i < size; i++)
     {
         mtx_r[row][col] += m1[row][i] * m2[i][col];       
@@ -18,7 +23,6 @@ int main(int argc, char const *argv[])
     // multiplicação de matrizes utilizando threads
 
     // entrada do tamanho das matrizes via linha de comando
-
     int mat1_row_size = atoi(argv[1]);
     int mat1_column_size = atoi(argv[2]);
     int mat2_row_size = atoi(argv[3]);
@@ -46,7 +50,8 @@ int main(int argc, char const *argv[])
             mtx1.push_back(vector<int>());
             for (int j = 0; j < mat1_column_size; j++)
             {
-                mtx1[i].push_back(rand() % 100);
+                mtx1[i].push_back(2);
+                // mtx1[i].push_back(rand() % 100);
             }
             
         }
@@ -56,7 +61,8 @@ int main(int argc, char const *argv[])
             mtx2.push_back(vector<int>());
             for (int j = 0; j < mat1_column_size; j++)
             {
-                mtx2[i].push_back(rand() % 100);
+                mtx2[i].push_back(3);
+                // mtx2[i].push_back(rand() % 100);
             }
             
         }
@@ -87,7 +93,8 @@ int main(int argc, char const *argv[])
         int matr_row_size = mat1_row_size;
         int matr_column_size = mat2_column_size;
         vector<vector<int>> mtx_resulting;
-        
+
+        // inicializando a matriz resultante com valores 0
         for (int i = 0; i < matr_row_size; i++)
         {
             mtx_resulting.push_back(vector<int>());
@@ -109,14 +116,22 @@ int main(int argc, char const *argv[])
         //     cout << "" << endl;
         // }
 
-        // // criando as threads
-        // std::thread t1();
-        // std::thread t2();
-        // std::thread t3();
-        // std::thread t4();
+
+        // criando as threads
+        std::thread t0();
+        std::thread t1();
+        std::thread t2();
+        std::thread t3();
 
 
         // chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+
+        for (int i = 0; i < matr_row_size; i++)
+        {
+            if(i % 4 == 0) {
+            }
+            
+        }
         
         // //IDEIA
         // //UTILIZAR 4 THREADS
@@ -129,16 +144,16 @@ int main(int argc, char const *argv[])
 
         // cout << "Tempo: " << duration_time << "ms" << endl;
 
-        // // imprimindo matriz resultante na tela
-        // // cout << "Matriz resultante" << endl;
-        // // for (int i = 0; i < matr_row_size; i++)
-        // // {
-        // //     for (int j = 0; j < matr_column_size; j++)
-        // //     {
-        // //         cout << mtx_resulting[i][j] << " ";
-        // //     }
-        // //     cout << "" << endl;
-        // // }
+        // imprimindo matriz resultante na tela
+        cout << "Matriz resultante" << endl;
+        for (int i = 0; i < matr_row_size; i++)
+        {
+            for (int j = 0; j < matr_column_size; j++)
+            {
+                cout << mtx_resulting[i][j] << " ";
+            }
+            cout << "" << endl;
+        }
 
     }
     
