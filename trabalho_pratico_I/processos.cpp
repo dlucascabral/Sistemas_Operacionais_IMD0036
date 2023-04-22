@@ -70,72 +70,65 @@ int main(int argc, char *argv[]){
     }
     matrizresultante = (int *) shmat(memoria, NULL, 0);
 
+// Divide o trabalho entre os processos com base no número de valores resultantes que cada processo deve calcular
+    int P;
+    cout << "Digite o número de valores que cada processo deve calcular: ";
+    cin >> P;
 
-
-//criando os processos 1 e 2
-
-    pid_t processo1, processo2;
-    int metade = linha1/2;
-    processo1 = fork();
-    chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-   
-    if (processo1 < 0)
-    {
-        cerr<<"Erro na criação do processo1"<<endl;
-        exit(EXIT_FAILURE);
+    int numero_processos = (linha1 * coluna2) / P;
+    if ((linha1 * coluna2) % P != 0) {
+        numero_processos++;
     }
-    else if (processo1 == 0)//Aqui o processo 1 vai executar a metade da matriz resultante.
-    {
-        for (int i = 0; i < metade; i++)
-        {
-            for (int j = 0; j < coluna2; j++)
-            {
-                int calculo = 0;
-                for (int k = 0; k < coluna1; k++)
-                {
-                    calculo += matriz1[i][k] * matriz2[k][j];
-                }
-                matrizresultante[(i*coluna2)+j] = calculo;
+
+    int valor_por_processo[numero_processos];
+    for (int i = 0; i < numero_processos; i++) {
+        if (i == numero_processos - 1) {
+            valor_por_processo[i] = (linha1 * coluna2) - (P * (numero_processos - 1));
+        } else {
+            valor_por_processo[i] = P;
+        }
+    }
+
+    // Variáveis para controle dos processos
+    int pid, status;
+    int indiceatual = 0;
+chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+    for (int i = 0; i < numero_processos; i++) {
+        pid = fork();
+    if (pid == 0) {
+    int primeire_indice = indiceatual;
+    int indicefinal = indiceatual + valor_por_processo[i] - 1;
+         for (int j = primeire_indice; j <= indicefinal; j++) {
+            int linha = j / coluna2;
+            int coluna = j % coluna2;
+
+            int sum = 0;
+            for (int k = 0; k < coluna1; k++) {
+                sum += matriz1[linha][k] * matriz2[k][coluna];
             }
-            
-        }
-        shmdt(matrizresultante);//desanexando a memoria partilhada desse processo.
-        exit(EXIT_SUCCESS);
-        
-    }
-    else{ //processo pai
-        processo2 = fork();//O processo 2 vai terminar a outra metade da matriz resultante.
-        if (processo2 < 0)
-        {
-            cerr<<"Erro na criação do processo2."<<endl;
-            exit(EXIT_FAILURE);
-        }
-        else if (processo2 == 0)
-        {
-            for (int i = metade; i < linha1; i++)
-            {
-                for (int j = 0; j < coluna2; j++)
-                {
-                    int calculo = 0;
-                    for (int k = 0; k < coluna1; k++)
-                    {
-                        calculo += matriz1[i][k] * matriz2[k][j];
-                    }
-                    matrizresultante[(i*coluna2)+j] = calculo;
-                }
-                
-            }
-            shmdt(matrizresultante);//desanexando a memoria partilhada desse processo.
-            exit(EXIT_SUCCESS);
-        }
-    }
 
-//esperando os dois processos acabarem para retomar ao processo pai.
-    for (int i = 0; i < 2; i++)
-    {
+            matrizresultante[j] = sum;
+        }
+        shmdt(matrizresultante);
+        exit(0);
+    } 
+
+    // Atualiza o índice atual
+    indiceatual += valor_por_processo[i];
+
+    // Espera pelo processo filho atual antes de criar o próximo
+    /*if (i < numero_processos - 1) {
         wait(NULL);
-    }
-    
+    }*/
+}
+
+// Espera pelos processos filhos restantes
+/*
+for (int i = 0; i < numero_processos - 1; i++) {
+    wait(NULL);
+}*/
+wait(NULL);
+ 
     shmctl(memoria, IPC_RMID, NULL);
 //desalocando as memórias.
      for ( int i = 0; i < linha1; i++)
