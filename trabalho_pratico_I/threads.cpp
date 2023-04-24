@@ -43,16 +43,17 @@ void *multiplica_parte_matriz(void *arg) {
 }
 
 void multiplica_matriz(int linha, int coluna, int **matrizA, int **matrizB, int **matrizR) {
-    pthread_t threads[4];
-    struct thread_data data[4];
+    int nThreads = 4;
+    pthread_t threads[nThreads];
+    struct thread_data data[nThreads];
     
     // Divisão das linhas da matriz por threads
-    int linhas_por_thread = linha / 4;
+    int linhas_por_thread = linha / nThreads;
     int linha_ini = 0;
     
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < nThreads; i++) {
         int linha_fim = linha_ini + linhas_por_thread;
-        if (i == 3) linha_fim = linha; // Última thread pega as linhas restantes
+        if (i == (nThreads-1)) linha_fim = linha; // Última thread pega as linhas restantes
         data[i].id = i;
         data[i].linha_ini = linha_ini;
         data[i].linha_fim = linha_fim;
@@ -65,7 +66,7 @@ void multiplica_matriz(int linha, int coluna, int **matrizA, int **matrizB, int 
     }
     
     // Espera que todas as threads terminem a execução
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < nThreads; i++) {
         pthread_join(threads[i], NULL);
     }
 }
