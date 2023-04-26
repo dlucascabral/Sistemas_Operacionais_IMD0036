@@ -42,8 +42,7 @@ void *multiplica_parte_matriz(void *arg) {
     pthread_exit(NULL);
 }
 
-void multiplica_matriz(int linha, int coluna, int **matrizA, int **matrizB, int **matrizR) {
-    int nThreads = 4;
+void multiplica_matriz(int linha, int coluna, int **matrizA, int **matrizB, int **matrizR, int nThreads) {
     pthread_t threads[nThreads];
     struct thread_data data[nThreads];
     
@@ -99,6 +98,7 @@ int main(int argc, char const *argv[])
     int coluna1 = atoi(argv[2]);
     int linha2 = atoi(argv[3]);
     int coluna2 = atoi(argv[4]);
+    int nThreads = atoi(argv[5]);
 
     if (coluna1 != linha2)
     {
@@ -127,7 +127,7 @@ int main(int argc, char const *argv[])
     preeche_matriz(linha2, coluna2, matriz2);
     
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    multiplica_matriz(linha1, coluna2, matriz1, matriz2, matrizResultante);
+    multiplica_matriz(linha1, coluna2, matriz1, matriz2, matrizResultante, nThreads);
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
     cout<<"Tempo " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[ms]" <<endl;
